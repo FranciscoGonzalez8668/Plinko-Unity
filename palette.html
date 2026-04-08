@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Paleta Neon Plinko</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #081220;
+      font-family: 'Courier New', monospace;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    h1 {
+      color: #00F5FF;
+      font-size: 1.6rem;
+      letter-spacing: 4px;
+      margin-bottom: 40px;
+      text-transform: uppercase;
+      text-shadow: 0 0 12px #00F5FF;
+    }
+
+    .palette {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 40px;
+    }
+
+    .swatch {
+      width: 120px;
+      cursor: pointer;
+      border-radius: 12px;
+      overflow: hidden;
+      transition: transform 0.15s, box-shadow 0.15s;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .swatch:hover {
+      transform: translateY(-6px) scale(1.04);
+    }
+
+    .swatch .color-block {
+      height: 100px;
+      width: 100%;
+      transition: filter 0.15s;
+    }
+
+    .swatch:hover .color-block {
+      filter: brightness(1.2);
+    }
+
+    .swatch .info {
+      background: rgba(255,255,255,0.05);
+      padding: 10px 8px;
+      text-align: center;
+    }
+
+    .swatch .name {
+      color: #fff;
+      font-size: 0.7rem;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+    }
+
+    .swatch .hex {
+      font-size: 0.85rem;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    .swatch .copied-msg {
+      font-size: 0.65rem;
+      color: #aaa;
+      margin-top: 4px;
+      height: 12px;
+      transition: opacity 0.3s;
+      opacity: 0;
+    }
+
+    .swatch.copied .copied-msg {
+      opacity: 1;
+      color: #B7FF00;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: rgba(0,245,255,0.15);
+      border: 1px solid #00F5FF;
+      color: #00F5FF;
+      padding: 10px 24px;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      letter-spacing: 2px;
+      opacity: 0;
+      transition: opacity 0.3s, transform 0.3s;
+      pointer-events: none;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .unity-section {
+      margin-top: 10px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 20px 28px;
+      max-width: 500px;
+      width: 100%;
+    }
+
+    .unity-section h2 {
+      color: #FFD84D;
+      font-size: 0.75rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+      text-shadow: 0 0 8px #FFD84D;
+    }
+
+    .unity-section pre {
+      color: #ccc;
+      font-size: 0.8rem;
+      line-height: 1.7;
+      cursor: pointer;
+      transition: color 0.2s;
+      white-space: pre-wrap;
+    }
+
+    .unity-section pre:hover {
+      color: #fff;
+    }
+
+    .unity-section .copy-hint {
+      font-size: 0.65rem;
+      color: #555;
+      margin-top: 10px;
+      letter-spacing: 1px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Paleta Neon Plinko</h1>
+
+  <div class="palette" id="palette"></div>
+
+  <div class="unity-section">
+    <h2>Unity C# — click para copiar</h2>
+    <pre id="unity-code" onclick="copyUnity()">Color darkNavy   = new Color32(  8,  18,  32, 255);
+Color neonCyan   = new Color32(  0, 245, 255, 255);
+Color neonPink   = new Color32(255,  58, 242, 255);
+Color neonLime   = new Color32(183, 255,   0, 255);
+Color neonYellow = new Color32(255, 216,  77, 255);</pre>
+    <div class="copy-hint">click para copiar el bloque completo</div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const colors = [
+      { name: "Dark Navy",    hex: "#081220", glow: "#081220" },
+      { name: "Neon Cyan",    hex: "#00F5FF", glow: "#00F5FF" },
+      { name: "Neon Pink",    hex: "#FF3AF2", glow: "#FF3AF2" },
+      { name: "Neon Lime",    hex: "#B7FF00", glow: "#B7FF00" },
+      { name: "Neon Yellow",  hex: "#FFD84D", glow: "#FFD84D" },
+    ];
+
+    const palette = document.getElementById("palette");
+
+    colors.forEach(c => {
+      const div = document.createElement("div");
+      div.className = "swatch";
+      div.style.boxShadow = `0 4px 24px ${c.glow}33`;
+      div.innerHTML = `
+        <div class="color-block" style="background:${c.hex}"></div>
+        <div class="info">
+          <div class="name">${c.name}</div>
+          <div class="hex" style="color:${c.hex === '#081220' ? '#aaa' : c.hex}; text-shadow: 0 0 8px ${c.hex}">${c.hex}</div>
+          <div class="copied-msg">copiado!</div>
+        </div>
+      `;
+      div.addEventListener("click", () => {
+        navigator.clipboard.writeText(c.hex);
+        div.classList.add("copied");
+        showToast(`${c.hex} copiado`);
+        setTimeout(() => div.classList.remove("copied"), 1800);
+      });
+      palette.appendChild(div);
+    });
+
+    function showToast(msg) {
+      const t = document.getElementById("toast");
+      t.textContent = msg;
+      t.classList.add("show");
+      setTimeout(() => t.classList.remove("show"), 1800);
+    }
+
+    function copyUnity() {
+      const code = document.getElementById("unity-code").textContent;
+      navigator.clipboard.writeText(code);
+      showToast("bloque Unity copiado");
+    }
+  </script>
+</body>
+</html>

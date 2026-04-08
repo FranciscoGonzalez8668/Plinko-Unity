@@ -40,9 +40,9 @@
 - [x] Probar que funciona correctamente
 
 ### Entrega
-- [ ] Comprimir proyecto en ZIP
-- [ ] Subir ZIP al Drive y dejar link público
-- [ ] Entregar en doctaonline.com
+- [x ] Comprimir proyecto en ZIP
+- [ x] Subir ZIP al Drive y dejar link público
+- [x ] Entregar en doctaonline.com
 
 ---
 
