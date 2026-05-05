@@ -19,6 +19,7 @@ public class ScoreZone : MonoBehaviour
         {
             other.gameObject.SetActive(false);
             ScoreManager.Instance.AddScore(points);
+            AudioManager.Instance?.PlayBallEnterZone();
         }
     }
 }

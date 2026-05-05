@@ -23,6 +23,8 @@ public class BallSpawner : MonoBehaviour
         Rigidbody2D rb = ball.GetComponent<Rigidbody2D>();
         float randomX = Random.Range(-0.5f, 0.5f);
         rb.AddForce(new Vector2(randomX, 0f), ForceMode2D.Impulse);
+
+        AudioManager.Instance?.PlayBallSpawn();
     }
 
 }

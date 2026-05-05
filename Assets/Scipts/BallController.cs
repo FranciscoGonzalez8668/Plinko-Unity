@@ -22,6 +22,9 @@ public class BallController: MonoBehaviour
         }
     }
 
-
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        AudioManager.Instance?.PlayBallHitPeg();
+    }
 }
 

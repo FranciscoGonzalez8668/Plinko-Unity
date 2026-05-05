@@ -39,6 +39,7 @@ public class BallCamera : MonoBehaviour
     {
         isFollowing = true;
         funnyCanvas.gameObject.SetActive(true);
+        AudioManager.Instance?.StartSpaceMusic();
 
         // La cámara se convierte en hija de la pelota — se mueve exacta con ella
         cam.transform.SetParent(ball.transform);
@@ -50,6 +51,7 @@ public class BallCamera : MonoBehaviour
         cam.transform.SetParent(originalParent);
         cam.transform.SetPositionAndRotation(originalPosition, Quaternion.identity);
         funnyCanvas.gameObject.SetActive(false);
+        AudioManager.Instance?.StopSpaceMusic();
         isFollowing = false;
     }
 }
